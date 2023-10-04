@@ -67,9 +67,7 @@ public class Grafo {
             arestas = e.nextInt();
             for(int i = 0; i<arestas;i++){
                 int origem = e.nextInt();
-                System.out.println("Origem: "+origem);
                 int destino = e.nextInt();
-                System.out.println("Destino: "+origem);
                 if(this.direcionado) {
                     matGrafo[origem][destino] = e.nextInt();
 
@@ -103,7 +101,7 @@ public class Grafo {
             }
             arquivo.write(vertices + "\n");
             for(int i = 0; i < vertices; i++){
-                arquivo.write(i+" "+matCoords[1][i]+" "+matCoords[2][i]+"\n");
+                arquivo.write(i+" "+matCoords[0][i]+" "+matCoords[1][i]+"\n");
             }
             arquivo.write(arestas+"\n");
             if(direcionado) {
@@ -209,5 +207,6 @@ public class Grafo {
         if(!achou){
             System.out.print("Nenhuma adjacência encontrada!");
         }
+        System.out.println();
     }
 }

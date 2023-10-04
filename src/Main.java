@@ -98,8 +98,9 @@ public class Main {
                     break;
                 default:
                     System.out.println("Deseja sair da aplicação?(s/n)");
+                    e.nextLine();
                     escolhaC = e.nextLine().charAt(0);
-                    if(escolhaC == 's'){
+                    if(escolhaC != 's'){
                         escolha = 0;
                     }else{
                         escolha = 9;
