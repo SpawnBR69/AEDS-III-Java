@@ -131,6 +131,22 @@ public class Grafo {
         }
     }
 
+    public void criaGrafoVazio(int tamanho){
+        Scanner e = new Scanner(System.in);
+        vertices = tamanho;
+        matGrafo =  new int[vertices][vertices];
+        matCoords = new int[2][vertices];
+        for(int i = 0; i < vertices; i++){
+            System.out.println("Digite a coordenada x do vértice "+i+": ");
+            matCoords[0][i] = e.nextInt();
+            System.out.println("Digite a coordenada y do vértice "+i+": ");
+            matCoords[1][i] = e.nextInt();
+            for(int j = 0; j < vertices; j++){
+                matGrafo[i][j] = -1;
+            }
+        }
+    }
+
     public void imprimeGrafo(){
         for(int i = 0; i < vertices; i++){
             for (int j = 0; j < vertices; j++){

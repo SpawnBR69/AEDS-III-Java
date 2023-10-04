@@ -2,6 +2,13 @@ import java.util.Scanner;
 
 public class Main {
 
+    public static void imprimeMenuG(){
+        System.out.println("_________________________________________");
+        System.out.println("|1. Criar grafo vazio.                  |");
+        System.out.println("|2. Importar grafo de arquivo.          |");
+        System.out.println("_________________________________________");
+    }
+
     public static void imprimeMenu(){
         System.out.println("_________________________________________");
         System.out.println("|1. Imprimir grafo.                     |");
@@ -18,6 +25,7 @@ public class Main {
 
     public static void main(String[] args){
         int escolha = 0;
+        int tamanho;
         int origem;
         int destino;
         int peso;
@@ -25,7 +33,14 @@ public class Main {
         char escolhaC;
         Scanner e = new Scanner(System.in);
         Grafo grafo = new Grafo();
-        grafo.lerArquivo("src/grafo.txt");
+        imprimeMenuG();
+        escolha = e.nextInt();
+        if(escolha == 1){
+            tamanho = e.nextInt();
+            grafo.criaGrafoVazio(tamanho);
+        }else{
+            grafo.lerArquivo("src/grafo.txt");
+        }
         while(escolha != 9){
             imprimeMenu();
             System.out.println("Digite sua escolha: ");
