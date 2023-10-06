@@ -136,6 +136,7 @@ public class Grafo {
         vertices = tamanho;
         matGrafo =  new int[vertices][vertices];
         matCoords = new int[2][vertices];
+        arestas =  0;
         this.direcionado = direcionado;
         for(int i = 0; i < vertices; i++){
             System.out.println("Digite a coordenada x do vértice "+i+": ");
@@ -176,6 +177,7 @@ public class Grafo {
             matGrafo[origem][destino] = -1;
             matGrafo[destino][origem] = -1;
         }
+        arestas--;
     }
 
     public void insereAresta(int origem, int destino, int peso){
@@ -189,6 +191,7 @@ public class Grafo {
             matGrafo[origem][destino] = peso;
             matGrafo[destino][origem] = peso;
         }
+        arestas++;
     }
 
     public void alteraCoord(int vertice, int x, int y){
