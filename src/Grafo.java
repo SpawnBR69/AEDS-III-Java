@@ -131,11 +131,12 @@ public class Grafo {
         }
     }
 
-    public void criaGrafoVazio(int tamanho){
+    public void criaGrafoVazio(int tamanho, boolean direcionado){
         Scanner e = new Scanner(System.in);
         vertices = tamanho;
         matGrafo =  new int[vertices][vertices];
         matCoords = new int[2][vertices];
+        this.direcionado = direcionado;
         for(int i = 0; i < vertices; i++){
             System.out.println("Digite a coordenada x do vértice "+i+": ");
             matCoords[0][i] = e.nextInt();

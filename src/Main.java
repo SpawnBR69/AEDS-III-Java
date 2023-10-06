@@ -36,8 +36,16 @@ public class Main {
         imprimeMenuG();
         escolha = e.nextInt();
         if(escolha == 1){
+            System.out.println("Digite o tamanho do grafo desejado: ");
             tamanho = e.nextInt();
-            grafo.criaGrafoVazio(tamanho);
+            System.out.println("O grafo é direcionado?(1 = Sim/2 = Não)");
+            int direcionado = e.nextInt();
+            boolean dire;
+            if(direcionado == 1)
+                dire = true;
+            else
+                dire = false;
+            grafo.criaGrafoVazio(tamanho,dire);
         }else{
             grafo.lerArquivo("src/grafo.txt");
         }
