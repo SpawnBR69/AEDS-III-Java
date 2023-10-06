@@ -166,6 +166,10 @@ public class Grafo {
     }
 
     public void removeAresta(int origem, int destino){
+        if(origem >= vertices || destino >= vertices){
+            System.out.println("Vértice inexistente!");
+            return;
+        }
         if(direcionado){
             matGrafo[origem][destino] = -1;
         }else{
@@ -175,6 +179,10 @@ public class Grafo {
     }
 
     public void insereAresta(int origem, int destino, int peso){
+        if(origem >= vertices || destino >= vertices){
+            System.out.println("Vértice inexistente!");
+            return;
+        }
         if(direcionado){
             matGrafo[origem][destino] = peso;
         }else{
@@ -184,11 +192,19 @@ public class Grafo {
     }
 
     public void alteraCoord(int vertice, int x, int y){
+        if(vertice >= vertices){
+            System.out.println("Vértice inexistente!");
+            return;
+        }
         matCoords[0][vertice] = x;
         matCoords[1][vertice] = y;
     }
 
     public int primeiroAdj(int vertice){
+        if(vertice >= vertices){
+            System.out.println("Vértice inexistente!");
+            return -1;
+        }
         for(int i = 0; i<vertices;i++){
             if(matGrafo[vertice][i] != -1){
                 return i;
@@ -200,6 +216,10 @@ public class Grafo {
     }
 
     public int proxAdj(int origem,int destino){
+        if(origem >= vertices || destino >= vertices){
+            System.out.println("Vértice inexistente!");
+            return -1;
+        }
         for(int i = destino+1;i < vertices;i++){
             if(matGrafo[origem][i] != -1){
                 return i;
@@ -211,6 +231,10 @@ public class Grafo {
     }
 
     public void listaAdj(int vertice){
+        if(vertice >= vertices){
+            System.out.println("Vértice inexistente!");
+            return;
+        }
         boolean achou = false;
         System.out.print("Adjacências: ");
         for(int i = 0; i < vertices ; i++){
