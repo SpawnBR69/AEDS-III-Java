@@ -1,7 +1,9 @@
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 public class Grafo {
 
@@ -252,5 +254,52 @@ public class Grafo {
             System.out.print("Nenhuma adjacência encontrada!");
         }
         System.out.println();
+    }
+
+    public void desehnhaGrafo(Graphics g){
+        Random r = new Random();
+        for(int i = 0; i < vertices; i++){
+            g.setColor(new Color(r.nextInt(256),r.nextInt(256),r.nextInt(256)));
+            g.fillOval(matCoords[0][i]*Janela.escala,matCoords[1][i]*Janela.escala,20,20);
+            g.setColor(Color.BLACK);
+            g.drawString(String.valueOf(i),matCoords[0][i]*Janela.escala+10,matCoords[1][i]*Janela.escala+10);
+        }
+    }
+
+    public void desenhaAresta(Graphics g){
+        g.setColor(Color.BLACK);
+        if(!direcionado) {
+            for (int i = 0; i < vertices; i++) {
+                for (int j = 0; j < vertices; j++) {
+                    if (matGrafo[i][j] == -1 || j > i) {
+                        continue;
+                    }
+                    g.drawLine(matCoords[0][i]*Janela.escala+10,matCoords[1][i]*Janela.escala+10,matCoords[0][j]*Janela.escala+10,matCoords[1][j]*Janela.escala+10);
+                    g.drawString(String.valueOf(matGrafo[i][j]),((matCoords[0][i]+matCoords[0][j])/2)*5,((matCoords[1][i]+matCoords[1][j])/2)*5);
+                }
+            }
+        }else{
+            for (int i = 0; i < vertices; i++) {
+                for (int j = 0; j < vertices; j++) {
+                    if (matGrafo[i][j] == -1) {
+                        continue;
+                    }
+                    drawArrow(g,matCoords[0][i]*Janela.escala+10,matCoords[1][i]*Janela.escala+10,matCoords[0][j]*Janela.escala+10,matCoords[1][j]*Janela.escala+10,20,10);
+                    g.drawString(String.valueOf(matGrafo[i][j]),(matCoords[0][i]+matCoords[0][j])/2,(matCoords[1][i]+matCoords[1][j])/2);
+                }
+            }
+        }
+    }
+
+    public void drawArrow(Graphics g, int x0, int y0, int x1,
+                          int y1, int headLength, int headAngle) {
+        double offs = headAngle * Math.PI / 180.0;
+        double angle = Math.atan2(y0 - y1, x0 - x1);
+        int[] xs = { x1 + (int) (headLength * Math.cos(angle + offs)), x1,
+                x1 + (int) (headLength * Math.cos(angle - offs)) };
+        int[] ys = { y1 + (int) (headLength * Math.sin(angle + offs)), y1,
+                y1 + (int) (headLength * Math.sin(angle - offs)) };
+        g.drawLine(x0, y0, x1, y1);
+        g.drawPolyline(xs, ys, 3);
     }
 }

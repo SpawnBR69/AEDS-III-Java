@@ -18,8 +18,9 @@ public class Main {
         System.out.println("|5. Editar coordenadas do vértice.      |");
         System.out.println("|6. Consultar primeiro adjacente.       |");
         System.out.println("|7. Consultar próximo adjacente.        |");
-        System.out.println("|8. Consultar lista de adjacentes       |");
-        System.out.println("|9. Sair.                               |");
+        System.out.println("|8. Consultar lista de adjacentes.      |");
+        System.out.println("|9. Desenhar Grafo.                     |");
+        System.out.println("|10. Sair.                              |");
         System.out.println("_________________________________________");
     }
 
@@ -49,7 +50,7 @@ public class Main {
         }else{
             grafo.lerArquivo("src/grafo.txt");
         }
-        while(escolha != 9){
+        while(escolha != 10){
             imprimeMenu();
             System.out.println("Digite sua escolha: ");
             escolha = e.nextInt();
@@ -119,6 +120,10 @@ public class Main {
                     origem = e.nextInt();
                     grafo.listaAdj(origem);
                     break;
+                case 9:
+                    Janela janela  = new Janela(grafo);
+                    janela.repaint();
+                    break;
                 default:
                     System.out.println("Deseja sair da aplicação?(s/n)");
                     e.nextLine();
@@ -126,7 +131,7 @@ public class Main {
                     if(escolhaC != 's'){
                         escolha = 0;
                     }else{
-                        escolha = 9;
+                        escolha = 10;
                     }
                     break;
             }
