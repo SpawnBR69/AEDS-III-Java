@@ -3,13 +3,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Random;
-import java.util.Scanner;
+import java.sql.Array;
+import java.util.*;
+
 public class Grafo {
 
     private int matGrafo[][];
 
     private int matCoords[][];
+
+    private String matNomes[];
 
     private int vertices;
 
@@ -41,6 +44,25 @@ public class Grafo {
         this.direcionado = direcionado;
     }
 
+    public void setMatNomes(int vertice, String nome){
+        matNomes[vertice] = nome;
+    }
+
+    public void printNomes(){
+        for(String i : matNomes){
+            System.out.println(i);
+        }
+    }
+
+    public int getMatNomes(String nome){
+        for(int i = 0; i < vertices; i ++){
+            if(matNomes[i].equals(nome)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void lerArquivo(String nomeArquivo){
         try {
             File arquivoGrafo = new File(nomeArquivo);
@@ -61,10 +83,13 @@ public class Grafo {
                 }
             }
             matCoords = new int[2][vertices];
+            matNomes = new String[vertices];
             for(int i = 0; i<vertices;i++){
                 e.nextInt();
                 matCoords[0][i] = e.nextInt();
                 matCoords[1][i] = e.nextInt();
+                e.skip(" ");
+                matNomes[i] = e.nextLine();
             }
             arestas = e.nextInt();
             for(int i = 0; i<arestas;i++){
@@ -103,7 +128,7 @@ public class Grafo {
             }
             arquivo.write(vertices + "\n");
             for(int i = 0; i < vertices; i++){
-                arquivo.write(i+" "+matCoords[0][i]+" "+matCoords[1][i]+"\n");
+                arquivo.write(i+" "+matCoords[0][i]+" "+matCoords[1][i]+" "+matNomes[i]+"\n");
             }
             arquivo.write(arestas+"\n");
             if(direcionado) {
@@ -138,6 +163,7 @@ public class Grafo {
         vertices = tamanho;
         matGrafo =  new int[vertices][vertices];
         matCoords = new int[2][vertices];
+        matNomes = new String[vertices];
         arestas =  0;
         this.direcionado = direcionado;
         for(int i = 0; i < vertices; i++){
@@ -145,6 +171,9 @@ public class Grafo {
             matCoords[0][i] = e.nextInt();
             System.out.println("Digite a coordenada y do vértice "+i+": ");
             matCoords[1][i] = e.nextInt();
+            System.out.println("Digite o nome do vértice "+i+": ");
+            e.skip("\n");
+            matNomes[i] = e.nextLine();
             for(int j = 0; j < vertices; j++){
                 matGrafo[i][j] = -1;
             }
@@ -256,6 +285,174 @@ public class Grafo {
         System.out.println();
     }
 
+    public void buscaEmLargura(){
+        int antecessor[] = new int[vertices];
+        char cor[] = new char[vertices];
+        int distancia[] = new int[vertices];
+        int j = 0;
+        for(int i = 0; i < vertices; i++){
+            antecessor[i] = -1;
+            cor[i] = 'B';
+            distancia[i] = Integer.MAX_VALUE;
+        }
+        for(int i = 0; i < vertices; i++){
+            if(cor[i] == 'B'){
+                visitaEmLargura(i,antecessor,cor,distancia);
+            }
+        }
+        for(int i = 0; i < vertices; i++){
+            System.out.println("Distancia vértice "+i+": "+distancia[i]);
+        }
+    }
+
+    public void visitaEmLargura(int vertice, int antecessor[], char cor[], int distancia[]){
+        int adjascente;
+        int prox;
+        cor[vertice] = 'C';
+        distancia[vertice] = 0;
+        Queue<Integer> fila = new LinkedList();
+        fila.add(vertice);
+        while(!fila.isEmpty()) {
+            prox = fila.poll();
+            adjascente = primeiroAdj(prox);
+            while (adjascente != -1) {
+                if (cor[adjascente] == 'B') {
+                    fila.add(adjascente);
+                    cor[adjascente] = 'C';
+                    antecessor[adjascente] = prox;
+                    distancia[adjascente] = distancia[prox] + 1;
+                    adjascente = proxAdj(prox, adjascente);
+                    System.out.println(adjascente);
+                }else{
+                    adjascente = proxAdj(prox, adjascente);
+                }
+            }
+            cor[prox] = 'P';
+        }
+    }
+
+    public void buscaEmProfundidade(){
+        int antecessor[] = new int[vertices];
+        char cor[] = new char[vertices];
+        int descoberta[] = new int[vertices];
+        int termino[] = new int[vertices];
+        Integer tempo = 0;
+        for(int i = 0; i < vertices; i++){
+            descoberta[i] = -1;
+            cor[i] = 'B';
+        }
+        for(int i = 0; i < vertices; i++){
+            if(cor[i] == 'B'){
+                tempo = visitaEmProfundidade(tempo, i, antecessor, cor, descoberta, termino);
+            }
+        }
+        for(int i = 0; i < vertices; i++){
+            System.out.println("Tempo de descoberta do vértice "+i+": "+descoberta[i]);
+            System.out.println("Tempo de término do vértice "+i+": "+termino[i]);
+        }
+    }
+
+    public int visitaEmProfundidade(Integer tempo, int vertice, int antecessor[], char cor[], int descoberta[], int termino[]){
+        int adjascente;
+        cor[vertice] = 'C';
+        tempo++;
+        descoberta[vertice] = tempo;
+        adjascente = primeiroAdj(vertice);
+        while(adjascente != -1){
+            antecessor[adjascente] = vertice;
+            if(cor[adjascente] == 'B'){
+                tempo = visitaEmProfundidade(tempo,adjascente,antecessor,cor,descoberta,termino);
+            }
+            adjascente = proxAdj(vertice,adjascente);
+        }
+        cor[vertice] = 'P';
+        tempo++;
+        termino[vertice] = tempo;
+        return tempo;
+    }
+
+    public void arvoreMinima(){
+        boolean visitado[] = new boolean[vertices];
+        int soma=0;
+        Queue<Par> pares = new PriorityQueue<>(new ComparaPares());
+        for(int i = 0; i < vertices; i ++){
+            if(matGrafo[0][i] != -1){
+                pares.add(new Par(matGrafo[0][i],i,0));
+            }
+        }
+        visitado[0] = true;
+        while(!pares.isEmpty()) {
+            Par par = pares.poll();
+            if (!visitado[par.destino]) {
+                soma+=par.peso;
+                System.out.println("O vértice "+par.destino+" entrou na arvore minima com uma aresta de peso "+par.peso);
+                for (int i = 0; i < vertices; i++) {
+                    if(matGrafo[par.destino][i] != -1){
+                        pares.add(new Par(matGrafo[par.destino][i],i,par.destino));
+                    }
+                }
+                visitado[par.destino] = true;
+
+            }
+        }
+        System.out.println("O peso total da arvore minima é "+soma);
+    }
+
+    class ComparaPares implements Comparator<Par>{
+        @Override
+        public int compare(Par p1, Par p2){
+            if(p1.peso < p2.peso){
+                return -1;
+            }if(p1.peso > p2.peso){
+                return 1;
+            }
+            return 0;
+        }
+    }
+
+    public void menorCaminho(int origem, int destino){
+        ArrayList<Par> pares = new ArrayList<Par>();
+        boolean visitado[] =  new boolean[vertices];
+        int distancia[] = new int[vertices];
+        int antecessor[] =  new int[vertices];
+        for(int i = 0; i < vertices; i++){
+            distancia[i] = Integer.MAX_VALUE;
+            antecessor[i]=-1;
+        }
+        visitado[origem] = true;
+        distancia[origem] = 0;
+        for(int i = 0; i < vertices; i++){
+            if(matGrafo[origem][i] != -1){
+                pares.add(new Par(matGrafo[origem][i],i,origem));
+            }
+        }
+
+        for(int i = 1; i < vertices; i++){
+            for (int j = 0; j < vertices; j++) {
+                if(matGrafo[i][j] != -1) {
+                    pares.add(new Par(matGrafo[i][j], j, i));
+                }
+            }
+        }
+        for(Par i : pares){
+            if(distancia[i.destino] > i.peso + distancia[i.origem]){
+                antecessor[i.destino] = i.origem;
+                distancia[i.destino] = i.peso + distancia[i.origem];
+            }
+        }
+        int prox = destino;
+        Stack<Integer> caminho = new Stack<>();
+        System.out.print("O menor caminho de "+origem+" até "+destino+" é: ");
+        do{
+            caminho.add(prox);
+            prox = antecessor[prox];
+        }while(prox != -1);
+        while(!caminho.isEmpty()){
+            System.out.print(caminho.pop()+" ");
+        }
+        System.out.println();
+    }
+
     public void desehnhaGrafo(Graphics g){
         Random r = new Random();
         for(int i = 0; i < vertices; i++){
@@ -291,8 +488,7 @@ public class Grafo {
         }
     }
 
-    public void drawArrow(Graphics g, int x0, int y0, int x1,
-                          int y1, int headLength, int headAngle) {
+    public void drawArrow(Graphics g, int x0, int y0, int x1, int y1, int headLength, int headAngle) {
         double offs = headAngle * Math.PI / 180.0;
         double angle = Math.atan2(y0 - y1, x0 - x1);
         int[] xs = { x1 + (int) (headLength * Math.cos(angle + offs)), x1,

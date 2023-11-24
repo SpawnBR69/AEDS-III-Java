@@ -16,11 +16,16 @@ public class Main {
         System.out.println("|3. Inserir Aresta.                     |");
         System.out.println("|4. Remover Aresta.                     |");
         System.out.println("|5. Editar coordenadas do vértice.      |");
-        System.out.println("|6. Consultar primeiro adjacente.       |");
-        System.out.println("|7. Consultar próximo adjacente.        |");
-        System.out.println("|8. Consultar lista de adjacentes.      |");
-        System.out.println("|9. Desenhar Grafo.                     |");
-        System.out.println("|10. Sair.                              |");
+        System.out.println("|6. Editar nome do vértice.             |");
+        System.out.println("|7. Consultar primeiro adjacente.       |");
+        System.out.println("|8. Consultar próximo adjacente.        |");
+        System.out.println("|9. Consultar lista de adjacentes.      |");
+        System.out.println("|10. Desenhar Grafo.                    |");
+        System.out.println("|11. Busca em Largura.                  |");
+        System.out.println("|12. Busca em Profundidade.             |");
+        System.out.println("|13. Gera Árvore Mínima.                |");
+        System.out.println("|14. Encontrar menor Caminho.           |");
+        System.out.println("|15. Sair.                              |");
         System.out.println("_________________________________________");
     }
 
@@ -32,6 +37,7 @@ public class Main {
         int peso;
         int x,y;
         char escolhaC;
+        String nome;
         Scanner e = new Scanner(System.in);
         Grafo grafo = new Grafo();
         imprimeMenuG();
@@ -50,7 +56,7 @@ public class Main {
         }else{
             grafo.lerArquivo("src/grafo.txt");
         }
-        while(escolha != 10){
+        while(escolha != -1){
             imprimeMenu();
             System.out.println("Digite sua escolha: ");
             escolha = e.nextInt();
@@ -98,13 +104,21 @@ public class Main {
                 case 6:
                     System.out.println("Digite o vértice: ");
                     origem = e.nextInt();
+                    System.out.println("Digite o novo nome do vértice: ");
+                    e.skip("\n");
+                    nome = e.nextLine();
+                    grafo.setMatNomes(origem,nome);
+                    break;
+                case 7:
+                    System.out.println("Digite o vértice: ");
+                    origem = e.nextInt();
                     if(grafo.primeiroAdj(origem) != -1){
                         System.out.println("A primeira adjacência deste vértice é: " + grafo.primeiroAdj(origem));
                     }else{
                         System.out.println("Esse vértice não possui adjacências!");
                     }
                     break;
-                case 7:
+                case 8:
                     System.out.println("Digite o vértice de origem: ");
                     origem = e.nextInt();
                     System.out.println("Digite o vértice de destino: ");
@@ -112,17 +126,45 @@ public class Main {
                     if(grafo.proxAdj(origem,destino) != -1){
                         System.out.println("O próximo adjacente desse vértice é: " + grafo.proxAdj(origem,destino));
                     }else{
-                        System.out.println("Esse vértice não possui adjacências!");
+                        System.out.println("Esse vértice não possui próxima adjacência!");
                     }
                     break;
-                case 8:
+                case 9:
                     System.out.println("Digite o vértice: ");
                     origem = e.nextInt();
                     grafo.listaAdj(origem);
                     break;
-                case 9:
+                case 10:
                     Janela janela  = new Janela(grafo);
                     janela.repaint();
+                    break;
+                case 11:
+                    grafo.buscaEmLargura();
+                    break;
+                case 12:
+                    grafo.buscaEmProfundidade();
+                    break;
+                case 13:
+                    grafo.arvoreMinima();
+                    break;
+                case 14:
+                    grafo.printNomes();
+                    System.out.println("Digite o nome da origem: ");
+                    e.skip("\n");
+                    nome = e.nextLine();
+                    origem = grafo.getMatNomes(nome);
+                    if(origem == -1) {
+                        System.out.println("Origem Inexistente");
+                        break;
+                    }
+                    System.out.println("Digite o nome do destino: ");
+                    nome = e.nextLine();
+                    destino = grafo.getMatNomes(nome);
+                    if(destino == -1) {
+                        System.out.println("Destino Inexistente");
+                        break;
+                    }
+                    grafo.menorCaminho(origem,destino);
                     break;
                 default:
                     System.out.println("Deseja sair da aplicação?(s/n)");
@@ -131,7 +173,7 @@ public class Main {
                     if(escolhaC != 's'){
                         escolha = 0;
                     }else{
-                        escolha = 10;
+                        escolha = -1;
                     }
                     break;
             }
