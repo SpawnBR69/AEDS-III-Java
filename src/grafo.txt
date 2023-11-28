@@ -1,8 +1,8 @@
 nao
 3
-0 2 2 Pau
-1 50 50 Pinto
-2 10 30 Porra
+0 2 2 Kruskal
+1 50 50 Prim
+2 10 30 Dijkstra
 3
 1 0 50
 2 0 1110
