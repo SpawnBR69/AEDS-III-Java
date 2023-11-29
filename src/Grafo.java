@@ -411,7 +411,7 @@ public class Grafo {
     }
 
     public void menorCaminho(int origem, int destino){
-        ArrayList<Par> pares = new ArrayList<Par>();
+        Queue<Par> pares = new LinkedList<>();
         boolean visitado[] =  new boolean[vertices];
         int distancia[] = new int[vertices];
         int antecessor[] =  new int[vertices];
@@ -426,18 +426,19 @@ public class Grafo {
                 pares.add(new Par(matGrafo[origem][i],i,origem));
             }
         }
-
-        for(int i = 1; i < vertices; i++){
-            for (int j = 0; j < vertices; j++) {
-                if(matGrafo[i][j] != -1) {
-                    pares.add(new Par(matGrafo[i][j], j, i));
+        while(!pares.isEmpty()){
+            Par par = pares.poll();
+            if(!visitado[par.destino]){
+                for (int i = 0; i < vertices; i++) {
+                    if(matGrafo[par.destino][i] != -1){
+                        pares.add(new Par(matGrafo[par.destino][i],i,par.destino));
+                    }
                 }
+                visitado[par.destino] = true;
             }
-        }
-        for(Par i : pares){
-            if(distancia[i.destino] > i.peso + distancia[i.origem]){
-                antecessor[i.destino] = i.origem;
-                distancia[i.destino] = i.peso + distancia[i.origem];
+            if(distancia[par.destino] > par.peso + distancia[par.origem]){
+                antecessor[par.destino] = par.origem;
+                distancia[par.destino] = par.peso + distancia[par.origem];
             }
         }
         int prox = destino;
